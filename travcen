@@ -1,1 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TravCen - Travel Offers Hub</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: url('/background.png') no-repeat center center fixed;
+      background-size: cover;
+      position: relative;
+    }
+
+    .overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.75);
+      z-index: 1;
+    }
+
+    .container {
+      position: relative;
+      z-index: 2;
+      padding: 2rem;
+      max-width: 1200px;
+      margin: auto;
+      text-align: center;
+    }
+
+    header {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #0066cc;
+      margin-bottom: 1rem;
+    }
+
+    .ad-left,
+    .ad-right {
+      position: fixed;
+      top: 100px;
+      width: 120px;
+      height: 600px;
+      background-color: #ffffffcc;
+      border: 1px solid #ccc;
+      z-index: 3;
+    }
+
+    .ad-left {
+      left: 10px;
+    }
+
+    .ad-right {
+      right: 10px;
+    }
+
+    @media screen and (max-width: 992px) {
+      .ad-left, .ad-right {
+        display: none;
+      }
+    }
+
+    .search-box {
+      margin-top: 2rem;
+    }
+
+    .search-box input,
+    .search-box select,
+    .search-box button {
+      padding: 0.5rem;
+      margin: 0.5rem;
+      font-size: 1rem;
+    }
+
+    .card-list {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 2rem;
+    }
+
+    .card {
+      background-color: white;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin: 1rem;
+      width: 280px;
+      overflow: hidden;
+      transition: transform 0.3s;
+    }
+
+    .card:hover {
+      transform: scale(1.03);
+    }
+
+    .card img {
+      width: 100%;
+      height: 180px;
+      object-fit: cover;
+    }
+
+    .card-content {
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .card-content h3 {
+      margin: 0 0 0.5rem 0;
+    }
+
+    .card-content p {
+      margin: 0.25rem 0;
+    }
+
+    .auth-buttons {
+      margin-top: 1rem;
+    }
+
+    .auth-buttons button {
+      margin: 0.5rem;
+      padding: 0.5rem 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+    }
+
+    .auth-buttons img {
+      height: 20px;
+      vertical-align: middle;
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="overlay"></div>
+
+  <div class="ad-left">Ad Left</div>
+  <div class="ad-right">Ad Right</div>
+
+  <div class="container">
+    <header>Welcome to TravCen</header>
+    <p>All travel deals in one place. Discover, compare, and book your next journey.</p>
+
+    <div class="auth-buttons">
+      <button><img src="https://img.icons8.com/color/20/000000/google-logo.png" alt="Google" /> Sign in with Google</button>
+      <button><img src="https://img.icons8.com/color/20/000000/facebook-new.png" alt="Facebook" /> Sign in with Facebook</button>
+    </div>
+
+    <div class="search-box">
+      <input type="text" id="departure" placeholder="Departure location" oninput="filterCards()" />
+      <input type="text" id="destination" placeholder="Destination" oninput="filterCards()" />
+      <select id="sort" onchange="filterCards()">
+        <option value="">Sort by</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+        <option value="rating">Rating</option>
+      </select>
+    </div>
+
+    <div class="card-list" id="card-list">
+      <div class="card" data-from="Vilnius" data-to="Greece" data-price="299">
+        <img src="https://source.unsplash.com/280x180/?beach" alt="Beach">
+        <div class="card-content">
+          <h3>Sunny Beach Escape</h3>
+          <p>From: Vilnius</p>
+          <p>To: Greece</p>
+          <p>Price: €299</p>
+        </div>
+      </div>
+
+      <div class="card" data-from="Kaunas" data-to="Swiss Alps" data-price="499">
+        <img src="https://source.unsplash.com/280x180/?mountains" alt="Mountains">
+        <div class="card-content">
+          <h3>Mountain Adventure</h3>
+          <p>From: Kaunas</p>
+          <p>To: Swiss Alps</p>
+          <p>Price: €499</p>
+        </div>
+      </div>
+
+      <div class="card" data-from="Riga" data-to="Paris" data-price="199">
+        <img src="https://source.unsplash.com/280x180/?city" alt="City">
+        <div class="card-content">
+          <h3>City Break</h3>
+          <p>From: Riga</p>
+          <p>To: Paris</p>
+          <p>Price: €199</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function filterCards() {
+      const from = document.getElementById('departure').value.toLowerCase();
+      const to = document.getElementById('destination').value.toLowerCase();
+      const sort = document.getElementById('sort').value;
+
+      let cards = Array.from(document.querySelectorAll('.card'));
+
+      cards.forEach(card => {
+        const cardFrom = card.getAttribute('data-from').toLowerCase();
+        const cardTo = card.getAttribute('data-to').toLowerCase();
+        card.style.display = cardFrom.includes(from) && cardTo.includes(to) ? 'block' : 'none';
+      });
+
+      if (sort === 'price-low') {
+        cards.sort((a, b) => a.getAttribute('data-price') - b.getAttribute('data-price'));
+      } else if (sort === 'price-high') {
+        cards.sort((a, b) => b.getAttribute('data-price') - a.getAttribute('data-price'));
+      }
+
+      const list = document.getElementById('card-list');
+      cards.forEach(card => list.appendChild(card));
+    }
+  </script>
+</body>
+</html>
 
